@@ -2,8 +2,8 @@ name: Deploy Angular app to GitHub Pages
 
 on:
   push:
-    branches:
-      - master  # Set this to your default branch
+    branches: [ master, main ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -15,19 +15,22 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: 18
           cache: 'npm'
+          cache-dependency-path: 'src/package-lock.json'
 
       - name: Install dependencies
         run: |
-          npm install -g @angular/cli
+          cd src
           npm ci
 
       - name: Build
-        run: ng build --base-href=/historia_cine/
+        run: |
+          cd src
+          npm run build -- --base-href=/historia_cine/
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/historia-cine/browser  # The folder the action should deploy
-          branch: gh-pages  # The branch the action should deploy to
+          folder: src/dist/browser
+          branch: gh-pages
