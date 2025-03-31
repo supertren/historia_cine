@@ -1,0 +1,15 @@
+<header class="main-header">
+  <div class="container header-container">
+    <div class="logo">
+      <a routerLink="/">Historia del Cine</a>
+    </div>
+    <button class="mobile-menu-btn" (click)="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <ul class="nav-menu" [ngClass]="{'active': menuActive}">
+      <li class="nav-item" *ngFor="let section of sections">
+        <a class="nav-link" [routerLink]="section.route" routerLinkActive="active">{{ section.title }}</a>
+      </li>
+    </ul>
+  </div>
+</header>
