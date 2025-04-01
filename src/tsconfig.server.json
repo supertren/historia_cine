@@ -4,7 +4,12 @@
     "outDir": "./out-tsc/server",
     "target": "es2020",
     "types": ["node"],
-    "module": "commonjs"
+    "module": "es2020", // Change to es2020 or later
+    "moduleResolution": "node", // Add module resolution
+    "esModuleInterop": true, // Add esModuleInterop
+    "allowSyntheticDefaultImports": true, // Add allowSyntheticDefaultImports
+    "experimentalDecorators": true, // Add experimentalDecorators
+    "emitDecoratorMetadata": true // Add emitDecoratorMetadata
   },
   "files": ["src/server.ts"],
   "angularCompilerOptions": {
