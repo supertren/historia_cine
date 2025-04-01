@@ -12,31 +12,24 @@ const indexHtml = join(serverDistFolder, 'index.server.html');
 const app = express();
 const commonEngine = new CommonEngine();
 
-/**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/**', (req, res) => {
- * // Handle API request
- * });
- * ```
- */
+// Serve static files from /browser, but exclude index.html
+app.use(
+  '/browser',
+  express.static(browserDistFolder, {
+    maxAge: '1y',
+    index: false, // Don't serve index.html from static middleware
+  })
+);
 
-/**
- * Serve static files from /browser
- */
-app.use(express.static(browserDistFolder, {
-  maxAge: '1y',
-  index: 'index.html',
-}));
-
-/**
- * Handle all other requests by rendering the Angular application.
- */
-app.get('*', (req, res, next) => { // Modified to use '*' instead of '**'
+// Handle Angular routes by rendering the application.
+app.get('*', (req, res, next) => {
   const { protocol, originalUrl, baseUrl, headers } = req;
+
+  // Check if it's a static file request. If so, let express.static handle it.
+  if (req.url.startsWith('/browser/')) {
+    next(); // Pass to the next middleware (express.static)
+    return;
+  }
 
   commonEngine
     .render({
@@ -50,12 +43,16 @@ app.get('*', (req, res, next) => { // Modified to use '*' instead of '**'
     .catch((err) => next(err));
 });
 
-/**
- * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
+// Start the server if this module is the main entry point.
 if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
+  let port = process.env['PORT'];
+
+  if (port) {
+    port = parseInt(port, 10); // Parse the port string to a number
+  } else {
+    port = 4000; // Use the default port as a number
+  }
+
   app.listen(port, '0.0.0.0', () => {
     console.log(`Node Express server listening on http://0.0.0.0:${port}`);
   });
