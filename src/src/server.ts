@@ -45,10 +45,10 @@ app.get('*', (req, res, next) => {
 
 // Start the server if this module is the main entry point.
 if (isMainModule(import.meta.url)) {
-  let port = process.env['PORT'];
+  let port: number; // Explicitly declare port as a number
 
-  if (port) {
-    port = parseInt(port, 10); // Parse the port string to a number
+  if (process.env['PORT']) {
+    port = parseInt(process.env['PORT'], 10); // Parse the port string to a number
   } else {
     port = 4000; // Use the default port as a number
   }
