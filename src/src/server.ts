@@ -59,7 +59,7 @@ app.get('**', (req, res, next) => {
  */
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
-  app.listen(port, '0.0.0.0', () => {
+  app.listen(port, '0.0.0.0') => {
     console.log(`Node Express server listening on http://0.0.0.0:${port}`);
   });
 }
